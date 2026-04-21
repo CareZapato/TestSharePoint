@@ -72,6 +72,8 @@ Proporcionar un entorno de aprendizaje local para:
 
 ¡Listo! El sistema funcionará en **modo local** sin necesidad de configurar SharePoint.
 
+> 📘 **¿Quieres integrar con SharePoint?** Consulta la [Guía de Configuración de SharePoint](CONFIGURACION-SHAREPOINT.md) para instrucciones paso a paso.
+
 ## 📋 Funcionalidades
 
 ### Panel de Control
@@ -167,6 +169,8 @@ Por defecto, el sistema funciona en **modo local**:
 ### Modo SharePoint (Integración completa)
 
 Para habilitar la integración con SharePoint Online:
+
+> 📘 **Guía Completa Disponible:** Consulta [CONFIGURACION-SHAREPOINT.md](CONFIGURACION-SHAREPOINT.md) para una guía detallada paso a paso con capturas y solución de problemas.
 
 #### 1. Registrar una Aplicación en Azure AD
 
