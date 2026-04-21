@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SharePoint Payment Lab - Sistema de Pagos de Seguros</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div>
+                    <h1>📊 SharePoint Payment Lab</h1>
+                    <p class="subtitle">Sistema de Simulación de Pagos de Seguros con Integración a SharePoint</p>
+                </div>
+                <button onclick="openHelpModal()" class="help-button" title="Ayuda e Instrucciones">
+                    ❓
+                </button>
+            </div>
+        </header>
+
+        <!-- Panel de Control -->
+        <section class="control-panel">
+            <h2>Panel de Control</h2>
+            
+            <div class="button-group">
+                <button onclick="loadMockData()" class="btn btn-primary">
+                    🔄 Cargar Datos Mock
+                </button>
+                
+                <button onclick="generateCsv()" class="btn btn-success">
+                    📄 Generar CSV
+                </button>
+                
+                <button onclick="uploadToSharePoint()" class="btn btn-warning">
+                    ☁️ Enviar a SharePoint
+                </button>
+                
+                <button onclick="checkSharePointStatus()" class="btn btn-info">
+                    ⚙️ Estado SharePoint
+                </button>
+            </div>
+        </section>
+
+        <!-- Escenarios de Simulación -->
+        <section class="scenarios">
+            <h2>Escenarios de Simulación</h2>
+            
+            <div class="scenario-grid">
+                <button onclick="applyScenario('pago-online-confirmado')" class="scenario-btn">
+                    💳 Pago en Línea Confirmado
+                </button>
+                
+                <button onclick="applyScenario('pago-automatico-confirmado')" class="scenario-btn">
+                    🔁 Pago Automático Confirmado
+                </button>
+                
+                <button onclick="applyScenario('pago-rechazado')" class="scenario-btn">
+                    ❌ Pago Rechazado
+                </button>
+                
+                <button onclick="applyScenario('lote-confirmados')" class="scenario-btn">
+                    📦 Lote de Confirmados
+                </button>
+                
+                <button onclick="applyScenario('cuotas-pendientes')" class="scenario-btn">
+                    ⏳ Cuotas Pendientes
+                </button>
+            </div>
+        </section>
+
+        <!-- Búsqueda por RUT -->
+        <section class="search-section">
+            <h2>Consulta de Cuotas por RUT</h2>
+            
+            <div class="search-bar">
+                <input 
+                    type="text" 
+                    id="rutInput" 
+                    placeholder="Ingrese RUT (ej: 12345678-9)"
+                    onkeypress="if(event.key === 'Enter') searchByRut()"
+                >
+                <button onclick="searchByRut()" class="btn btn-primary">
+                    🔍 Buscar
+                </button>
+            </div>
+        </section>
+
+        <!-- Mensajes -->
+        <div id="messageArea" class="message-area"></div>
+
+        <!-- Tabla de Pagos -->
+        <section class="data-section">
+            <h2>Datos de Pagos <span id="recordCount" class="record-count"></span></h2>
+            
+            <div class="table-container">
+                <table id="paymentsTable">
+                    <thead>
+                        <tr>
+                            <th>RUT</th>
+                            <th>Email</th>
+                            <th>Póliza</th>
+                            <th>Cuota</th>
+                            <th>Monto</th>
+                            <th>Canal</th>
+                            <th>Estado</th>
+                            <th>Imputado</th>
+                            <th>Fecha Pago</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="paymentsTableBody">
+                        <tr>
+                            <td colspan="10" style="text-align: center; padding: 40px;">
+                                Haz clic en "Cargar Datos Mock" para ver los pagos
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>Laboratorio de Integración SharePoint - Sistema de Pagos de Seguros</p>
+            <p>Tecnologías: Spring Boot + Microsoft Graph API + CSV</p>
+        </footer>
+    </div>
+
+    <!-- Modal de Ayuda -->
+    <div id="helpModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📖 Guía de Uso - SharePoint Payment Lab</h2>
+                <button onclick="closeHelpModal()" class="close-button">&times;</button>
+            </div>
+            <div class="modal-body">
+                <section class="help-section">
+                    <h3>🚀 Inicio Rápido</h3>
+                    <ol>
+                        <li>Haz clic en <strong>"Cargar Datos Mock"</strong> para cargar datos de ejemplo</li>
+                        <li>Explora los pagos en la tabla</li>
+                        <li>Prueba los diferentes escenarios de simulación</li>
+                        <li>Genera reportes CSV y envíalos a SharePoint</li>
+                    </ol>
+                </section>
+
+                <section class="help-section">
+                    <h3>🎮 Panel de Control</h3>
+                    <ul>
+                        <li><strong>🔄 Cargar Datos Mock:</strong> Carga los datos de ejemplo desde el archivo JSON</li>
+                        <li><strong>📄 Generar CSV:</strong> Crea un archivo CSV con los pagos actuales y lo guarda localmente</li>
+                        <li><strong>☁️ Enviar a SharePoint:</strong> Genera el CSV y lo sube a SharePoint (si está configurado) o lo guarda localmente</li>
+                        <li><strong>⚙️ Estado SharePoint:</strong> Verifica si SharePoint está configurado correctamente</li>
+                    </ul>
+                </section>
+
+                <section class="help-section">
+                    <h3>🎭 Escenarios de Simulación</h3>
+                    <ul>
+                        <li><strong>💳 Pago en Línea Confirmado:</strong> Simula un pago online exitoso e imputado</li>
+                        <li><strong>🔁 Pago Automático Confirmado:</strong> Simula un pago recurrente procesado correctamente</li>
+                        <li><strong>❌ Pago Rechazado:</strong> Simula un pago rechazado por fondos insuficientes</li>
+                        <li><strong>📦 Lote de Confirmados:</strong> Genera 5 pagos confirmados para reportes</li>
+                        <li><strong>⏳ Cuotas Pendientes:</strong> Genera cuotas sin pagar para un RUT específico</li>
+                    </ul>
+                </section>
+
+                <section class="help-section">
+                    <h3>🔍 Búsqueda por RUT</h3>
+                    <p>Ingresa un RUT en el campo de búsqueda para ver todos los pagos de ese cliente.</p>
+                    <p><strong>RUTs de ejemplo:</strong></p>
+                    <ul>
+                        <li><code>12345678-9</code> - Pago confirmado</li>
+                        <li><code>15555666-7</code> - Cuotas pendientes</li>
+                        <li><code>11223344-5</code> - Pago rechazado</li>
+                    </ul>
+                </section>
+
+                <section class="help-section">
+                    <h3>☁️ Configuración de SharePoint</h3>
+                    <p><strong>Modo Local (por defecto):</strong></p>
+                    <ul>
+                        <li>No requiere configuración</li>
+                        <li>Los archivos CSV se guardan en <code>./generated-reports/</code></li>
+                    </ul>
+                    <p><strong>Modo SharePoint:</strong></p>
+                    <ul>
+                        <li>Configura las variables de entorno (ver archivo <code>.env.example</code>)</li>
+                        <li>Necesitas: Tenant ID, Client ID, Client Secret, Site ID, Drive ID</li>
+                        <li>Consulta el <code>README.md</code> para instrucciones detalladas</li>
+                    </ul>
+                </section>
+
+                <section class="help-section">
+                    <h3>📊 Formato del Reporte CSV</h3>
+                    <p>Los archivos generados incluyen:</p>
+                    <ul>
+                        <li>RUT, Email, Póliza, Prima, Cuota</li>
+                        <li>Monto, Canal, Pasarela, Estado</li>
+                        <li>Imputado, Fecha Pago, Fecha Imputación</li>
+                        <li>Descripción</li>
+                    </ul>
+                    <p>Nombre del archivo: <code>reporte-pagos-YYYYMMDD-HHmmss.csv</code></p>
+                </section>
+
+                <section class="help-section">
+                    <h3>💡 Consejos</h3>
+                    <ul>
+                        <li>Siempre verifica el estado de SharePoint antes de enviar archivos</li>
+                        <li>Los datos mock se resetean al aplicar un nuevo escenario</li>
+                        <li>Puedes usar "Cargar Datos Mock" para volver a los datos iniciales</li>
+                        <li>Los mensajes en la parte superior te guiarán en cada acción</li>
+                    </ul>
+                </section>
+
+                <section class="help-section">
+                    <h3>📚 Más Información</h3>
+                    <p>Consulta los archivos de documentación del proyecto:</p>
+                    <ul>
+                        <li><code>README.md</code> - Documentación completa</li>
+                        <li><code>INICIO-RAPIDO.md</code> - Guía de inicio rápido</li>
+                    </ul>
+                </section>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeHelpModal()" class="btn btn-primary">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

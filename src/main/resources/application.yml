@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: sharepoint-payment-lab
+  
+  # Configuración del servidor
+  servlet:
+    context-path: /
+  
+  # Jackson para manejo de fechas
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    date-format: yyyy-MM-dd'T'HH:mm:ss
+
+server:
+  port: 8080
+
+# Configuración de la aplicación
+app:
+  # Ruta local donde se guardarán los CSV si no hay SharePoint configurado
+  local-reports-path: ./generated-reports
+  
+  # Configuración de SharePoint - Usar variables de entorno
+  sharepoint:
+    enabled: ${SHAREPOINT_ENABLED:false}
+    tenant-id: ${SHAREPOINT_TENANT_ID:}
+    client-id: ${SHAREPOINT_CLIENT_ID:}
+    client-secret: ${SHAREPOINT_CLIENT_SECRET:}
+    site-id: ${SHAREPOINT_SITE_ID:}
+    drive-id: ${SHAREPOINT_DRIVE_ID:}
+    folder-path: ${SHAREPOINT_FOLDER_PATH:Reportes}
+  
+  # Configuración de escenarios de simulación
+  mock-data-path: classpath:data/mock-payments.json
+
+# Logging
+logging:
+  level:
+    com.example.sharepointlab: DEBUG
+    org.springframework.web: INFO
